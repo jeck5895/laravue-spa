@@ -22,5 +22,6 @@ Route::get('/', function () {
     //return view('welcome');
 });
 
-Route::get('api/projects', 'ProjectsController@index');
-Route::post('api/projects', 'ProjectsController@store');
+// Route::get('/{vue_capture?}', function () {
+//     return view('master-template.index');
+//   })->where('vue_capture', '[\/\w\.-]*');
