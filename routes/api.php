@@ -16,6 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+/*
+* This can be refactor to Route::resource('projects', 'ProjectsController@index');
+*Route::get('projects', 'ProjectsController@index');
+*Route::post('projects', 'ProjectsController@store');
+*/
+
+Route::group(['middleware' => 'auth:api'], function(){
+    // here is where you can put protected uri's 
+    Route::resource('projects','ProjectsController');
+});
 Route::get('projects', 'ProjectsController@index');
-Route::post('projects', 'ProjectsController@store');
 

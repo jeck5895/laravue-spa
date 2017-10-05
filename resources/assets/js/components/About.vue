@@ -27,13 +27,13 @@
             <small>11:09 PM - 1 Jan 2016</small>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-sm-8">
                 <passport-clients></passport-clients>
                 <passport-authorized-clients></passport-authorized-clients>
                 <passport-personal-access-tokens></passport-personal-access-tokens>
             </div>
-        </div>
+        </div> -->
     </div>        
 </template>
 

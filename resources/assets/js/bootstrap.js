@@ -22,16 +22,23 @@ try {
 
 //window.Vue = require('vue'); //require is import in es2016/es6 syntax 
 import Vue from 'vue';
+import Vuex from 'vuex';
 import moment from 'moment';
 import VueRouter from 'vue-router';
 import VeeValidate from 'vee-validate';
+import Auth  from './package/authentication/Auth';
+
 
 window.Vue = Vue;
+window.Vuex = Vuex;
 window.moment = moment;
 window.VeeValidate = VeeValidate;
 
 Vue.use(VeeValidate);
+Vue.use(Vuex);
 Vue.use(VueRouter);
+Vue.use(Auth);
+
 //Laravel Passport Api components
 Vue.component(
     'passport-clients',

@@ -17,11 +17,11 @@
 
 */
 
-Route::get('/', function () {
-    return view('master-template.index');
-    //return view('welcome');
-});
-
-// Route::get('/{vue_capture?}', function () {
+// Route::get('/', function () {
 //     return view('master-template.index');
-//   })->where('vue_capture', '[\/\w\.-]*');
+//     //return view('welcome');
+// });
+
+Route::get('/{vue_capture?}', function () {
+    return view('master-template.index');
+  })->where('vue_capture', '[\/\w\.-]*');

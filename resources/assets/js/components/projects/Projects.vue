@@ -35,41 +35,16 @@
                     <p class="level-item"><a>Published</a></p>
                     <p class="level-item"><a>Drafts</a></p>
                     <p class="level-item"><a>Deleted</a></p>
-                    <p class="level-item"><a class="button is-success" @click="showModal = true">Add Project</a></p>
+                    <p class="level-item" v-if="this.$auth.isAuthenticated()"><a class="button is-success" @click="showModal = true">Add Project</a></p>
                 </div>
             </nav>
 
             <div class="columns is-multiline">
-                <div class="column is-3" v-for="project in projects">
-                    <div class="card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                            <img :src="project.img_path" alt="Image">
-                            </figure>
-                        </div>
-                        <div class="card-content">
-                            <div class="media">
-                            <div class="media-left">
-                                <figure class="image is-48x48">
-                                <img src="/images/avatar.png" alt="Image">
-                                </figure>
-                            </div>
-                            <div class="media-content">
-                                <p class="title is-6">{{ project.user.name }}</p>
-                                <p class="subtitle is-7">{{ project.user.email }}</p>
-                            </div>
-                            </div>
-
-                            <div class="content">
-                                {{ project.description.substr(1,50) }}...
-                            <br>
-                            <small>{{ project.created_at | humanFormat }}</small>
-                            <br>
-                            <router-link to="/"> Read more </router-link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <!-- NOTE: New syntax of v-for only applies in components not on html tag -->
+                <project 
+                    v-for="project in projects" 
+                    v-bind:project="project" :key="project.id">
+                </project>
             </div>
         
             
@@ -85,9 +60,9 @@
 
 
 <script>
-    import modal from './modals/modal.vue';
-    import AddProjects from './forms/AddProjects.vue';
-
+    import modal from '../modals/modal.vue';
+    import AddProjects from '../forms/AddProjects.vue';
+    import Project from '../projects/Project.vue';
     export default {
         //to perform ajax when page is loaded specify it on mounted or created function
         data(){
@@ -97,18 +72,18 @@
             }
         },
         mounted(){
-            axios.get('api/projects')
+            this.getProjects(); //get all projects
+        },
+        computed:{ //computed are functions that are cached if varaiable dependencied didn't change
+            getProjects(){
+                axios.get('api/projects', this.$headersConfig)
                 .then(response => this.projects = response.data);
+            }
         },
         methods:{
             
         },
-        filters:{
-            humanFormat(date){
-                 return moment(date).format('MMMM Do YYYY');
-            }
-        },
-        components:{ modal, AddProjects}
+        components:{ modal, AddProjects, Project}
     }
 </script>
 
