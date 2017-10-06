@@ -65,19 +65,17 @@
     import Project from '../projects/Project.vue';
     export default {
         //to perform ajax when page is loaded specify it on mounted or created function
+        mounted(){
+            this.$store.commit('getProjects'); //get all projects call the function getProjects from store
+        },
         data(){
             return{
-                projects:[],
-                showModal:false
+                showModal:false,
             }
         },
-        mounted(){
-            this.getProjects(); //get all projects
-        },
         computed:{ //computed are functions that are cached if varaiable dependencied didn't change
-            getProjects(){
-                axios.get('api/projects', this.$headersConfig)
-                .then(response => this.projects = response.data);
+            projects(){ 
+                return this.$store.state.projectsModule.projects; //vuex with modules its better with large scale apps
             }
         },
         methods:{

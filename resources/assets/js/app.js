@@ -8,6 +8,7 @@
 require('./bootstrap'); //import vue js in bootstrap
 import router from './router/routes';
 import Navigation from './components/navigation/Navigation.vue';
+import {store} from './store/store';
 
 //set default base_url for axios
 //axios.defaults.baseURL = 'http://localhost:9000/api';
@@ -52,11 +53,12 @@ router.beforeEach((to, from, next)=>{
 
 const app = new Vue({
     el: '#app',
+    store, //or in ES2015 just store
     data:{
-        authUser:{
-            name:"Jerick Labasan",
-            email:"jeck.labasan@gmail.com"
-        }
+        
+    },
+    mounted(){
+        //console.log(this.$store.state)
     },
     router:router,
     components:{Navigation}
