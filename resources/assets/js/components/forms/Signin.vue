@@ -52,7 +52,7 @@ export default {
         return {
             email: '',
             password: '',
-            authStatus:false
+            authStatus: false
         }
     },
     methods: {
@@ -68,16 +68,15 @@ export default {
 
             axios.post('/oauth/token', data)
                 .then(response => {
-                    //console.log(response);
+                    this.$store.dispatch('setLoggedIn');
                     self.$auth.setToken(response.data.access_token, response.data.expires_in + Date.now());
                     self.$router.push("/dashboard");
-                    
+
                 })
                 .catch(function(error) {
-                    //error.response to retrieve all error response
-                    // console.log(error.response.data.message)
+
                     self.authStatus = error.response.data.message
-                    
+
                 })
         }
     }

@@ -154,7 +154,7 @@
                             <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/jgthms" target="_blank">
                             Twitter
                             </a> -->
-                <div class="navbar-item" v-if="!isLoggedIn">
+                <div class="navbar-item" v-if="!this.$auth.isAuthenticated()">
                     <div class="field is-grouped">
                         <p class="control">
                             <router-link to="/sign-in" class="button is-primary">
@@ -166,17 +166,20 @@
                         </p>
                     </div>
                 </div>
-                <div class="navbar-item has-dropdown is-hoverable" v-if="isLoggedIn">
+                <div class="navbar-item has-dropdown is-hoverable" v-if="this.$auth.isAuthenticated()">
                     <a class="navbar-link  is-active" href="/documentation/overview/start/">
-                        Jerick Labasan &nbsp;
+                        {{ User.name }} &nbsp;
                         <i class="fa fa-user"></i>
                     </a>
                     <div class="navbar-dropdown ">
                         <a class="navbar-item " href="/documentation/overview/start/">
-                            Profile
+                            Profile 
                         </a>
                         <a class="navbar-item " href="http://bulma.io/documentation/modifiers/syntax/">
                             Accounts
+                        </a>
+                        <a class="navbar-item " href="http://bulma.io/documentation/modifiers/syntax/">
+                            {{ User.email }}
                         </a>
 
                         <hr class="navbar-divider">
@@ -195,12 +198,21 @@
 <script>
 export default {
     mounted() {
-        this.isLoggedIn = this.$auth.isAuthenticated();
+
     },
     data() {
         return {
-            isLoggedIn: null
+           
         }
+    },
+    computed:{
+        User(){
+            return this.$store.state.authModule.authenticatedUser;
+        },
+        // isLoggedIn(){
+        //     this.$store.state.authModule.isLoggedIn;
+        //     //= this.$auth.isAuthenticated()
+        // }
     }
 }
 </script>

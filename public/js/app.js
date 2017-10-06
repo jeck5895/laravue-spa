@@ -50005,7 +50005,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     //to perform ajax when page is loaded specify it on mounted or created function
     mounted: function mounted() {
-        this.$store.commit('getProjects'); //get all projects call the function getProjects from store
+        this.$store.dispatch('getProjects'); //get all projects call the function getProjects from store
     },
     data: function data() {
         return {
@@ -50016,7 +50016,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         //computed are functions that are cached if varaiable dependencied didn't change
         projects: function projects() {
-            return this.$store.state.projectsModule.projects; //vuex with modules its better with large scale apps
+            return this.$store.getters.loadProjects; //vuex with modules its better with large scale apps
         }
     },
     methods: {},
@@ -50756,6 +50756,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         login: function login() {
+            var _this = this;
+
             var self = this;
             var data = {
                 client_id: 2,
@@ -50766,12 +50768,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             };
 
             axios.post('/oauth/token', data).then(function (response) {
-                //console.log(response);
+                _this.$store.dispatch('setLoggedIn');
                 self.$auth.setToken(response.data.access_token, response.data.expires_in + Date.now());
                 self.$router.push("/dashboard");
             }).catch(function (error) {
-                //error.response to retrieve all error response
-                // console.log(error.response.data.message)
+
                 self.authStatus = error.response.data.message;
             });
         }
@@ -51379,15 +51380,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        this.isLoggedIn = this.$auth.isAuthenticated();
-    },
+    mounted: function mounted() {},
     data: function data() {
-        return {
-            isLoggedIn: null
-        };
+        return {};
+    },
+
+    computed: {
+        User: function User() {
+            return this.$store.state.authModule.authenticatedUser;
+        }
     }
 });
 
@@ -51449,7 +51455,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("\n                Projects\n            ")])], 1), _vm._v(" "), _c('div', {
     staticClass: "navbar-end"
-  }, [(!_vm.isLoggedIn) ? _c('div', {
+  }, [(!this.$auth.isAuthenticated()) ? _c('div', {
     staticClass: "navbar-item"
   }, [_c('div', {
     staticClass: "field is-grouped"
@@ -51464,9 +51470,35 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "icon"
   }, [_c('i', {
     staticClass: "fa fa-sign-in"
-  })]), _vm._v(" "), _c('span', [_vm._v("Sign-in")])])], 1)])]) : _vm._e(), _vm._v(" "), (_vm.isLoggedIn) ? _c('div', {
+  })]), _vm._v(" "), _c('span', [_vm._v("Sign-in")])])], 1)])]) : _vm._e(), _vm._v(" "), (this.$auth.isAuthenticated()) ? _c('div', {
     staticClass: "navbar-item has-dropdown is-hoverable"
-  }, [_vm._m(4), _vm._v(" "), _vm._m(5)]) : _vm._e()])])])
+  }, [_c('a', {
+    staticClass: "navbar-link  is-active",
+    attrs: {
+      "href": "/documentation/overview/start/"
+    }
+  }, [_vm._v("\n                    " + _vm._s(_vm.User.name) + "  \n                    "), _c('i', {
+    staticClass: "fa fa-user"
+  })]), _vm._v(" "), _c('div', {
+    staticClass: "navbar-dropdown "
+  }, [_c('a', {
+    staticClass: "navbar-item ",
+    attrs: {
+      "href": "/documentation/overview/start/"
+    }
+  }, [_vm._v("\n                        Profile \n                    ")]), _vm._v(" "), _c('a', {
+    staticClass: "navbar-item ",
+    attrs: {
+      "href": "http://bulma.io/documentation/modifiers/syntax/"
+    }
+  }, [_vm._v("\n                        Accounts\n                    ")]), _vm._v(" "), _c('a', {
+    staticClass: "navbar-item ",
+    attrs: {
+      "href": "http://bulma.io/documentation/modifiers/syntax/"
+    }
+  }, [_vm._v("\n                        " + _vm._s(_vm.User.email) + "\n                    ")]), _vm._v(" "), _c('hr', {
+    staticClass: "navbar-divider"
+  }), _vm._v(" "), _vm._m(4)])]) : _vm._e()])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('a', {
     staticClass: "navbar-item is-hidden-desktop",
@@ -51621,37 +51653,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "fa fa-rss"
   })]), _vm._v(" "), _c('span', [_vm._v("Subscribe")])])])])])])])])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('a', {
-    staticClass: "navbar-link  is-active",
-    attrs: {
-      "href": "/documentation/overview/start/"
-    }
-  }, [_vm._v("\n                    Jerick Labasan  \n                    "), _c('i', {
-    staticClass: "fa fa-user"
-  })])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "navbar-dropdown "
-  }, [_c('a', {
-    staticClass: "navbar-item ",
-    attrs: {
-      "href": "/documentation/overview/start/"
-    }
-  }, [_vm._v("\n                        Profile\n                    ")]), _vm._v(" "), _c('a', {
-    staticClass: "navbar-item ",
-    attrs: {
-      "href": "http://bulma.io/documentation/modifiers/syntax/"
-    }
-  }, [_vm._v("\n                        Accounts\n                    ")]), _vm._v(" "), _c('hr', {
-    staticClass: "navbar-divider"
-  }), _vm._v(" "), _c('div', {
     staticClass: "navbar-item"
   }, [_c('a', {
     staticClass: "navbar-item ",
     attrs: {
       "href": "http://bulma.io/documentation/grid/columns/"
     }
-  }, [_vm._v("\n                            Sign-out\n                        ")])])])
+  }, [_vm._v("\n                            Sign-out\n                        ")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -51670,66 +51679,20 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue__);
-var _this = this;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_projectsModule__ = __webpack_require__(214);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_authModule__ = __webpack_require__(215);
+
+
 
 
 
 
 __WEBPACK_IMPORTED_MODULE_1_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */]);
 
-var projectsModule = {
-    state: {
-        projects: []
-    },
-    mutations: {
-        getProjects: function getProjects(state) {
-            axios.get('api/projects', _this.$headersConfig).then(function (response) {
-                state.projects = response.data;
-                //console.log(state.projects)
-            });
-        }
-    },
-    actions: {},
-    getters: {
-        //it's a computed property for store
-        //always return an object
-        //i.e Display an featured projects "map" function is used to loop an array
-        /*
-            getFeaturedProjects: state => {
-                let featuredProjects = state.projects.map(project =>{
-                    if(project.isFeatured == 1){
-                        return {
-                            project_name = project.project_name,
-                            description = project.description
-                        }
-                    }
-                })
-            } 
-        */
-    }
-};
-
-var authModule = {
-    state: {
-        authenticatedUser: {
-            name: "Jerick Labasan",
-            email: "jeck.labasan@gmail.com"
-        }
-
-    },
-    mutations: {},
-    getters: {
-        getAuthUser: function getAuthUser(state) {
-            return state.authenticatedUser;
-        }
-    },
-    actions: {}
-};
-
 var store = new __WEBPACK_IMPORTED_MODULE_0_vuex__["a" /* default */].Store({
     modules: {
-        projectsModule: projectsModule,
-        authModule: authModule
+        projectsModule: __WEBPACK_IMPORTED_MODULE_2__modules_projectsModule__["a" /* default */],
+        authModule: __WEBPACK_IMPORTED_MODULE_3__modules_authModule__["a" /* default */]
     }
 });
 
@@ -52648,6 +52611,105 @@ var index_esm = {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 211 */,
+/* 212 */,
+/* 213 */,
+/* 214 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _this = this;
+
+/*
+    You can also extract the authModule objects[state, mutations, getters, actions] by file  by using extract default
+*/
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    state: {
+        projects: []
+    },
+    mutations: {
+        getProjects: function getProjects(state, data) {
+            state.projects = data;
+        }
+    },
+    actions: {
+        // the difference between action and mutation is async functions are placed in action
+        // and action will commit the mutation its a bad practice to place ajax calls on mutations
+        getProjects: function getProjects(context) {
+            axios.get('api/projects', _this.$headersConfig).then(function (response) {
+                context.commit('getProjects', response.data);
+            });
+        }
+    },
+    getters: {
+        loadProjects: function loadProjects(state) {
+            return state.projects;
+        }
+        //it's a computed property for store
+        //always return an object
+        //i.e Display an featured projects "map" function is used to loop an array
+        /*
+            getFeaturedProjects: state => {
+                let featuredProjects = state.projects.map(project =>{
+                    if(project.isFeatured == 1){
+                        return {
+                            project_name = project.project_name,
+                            description = project.description
+                        }
+                    }
+                })
+            } 
+        */
+    }
+});
+
+/***/ }),
+/* 215 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/*
+    You can also extract the authModule objects[state, mutations, getters, actions] by file  by using extract default
+*/
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    state: {
+        authenticatedUser: {
+            name: "Jerick Labasan",
+            email: "jeck.labasan@gmail.com"
+        },
+        isLoggedIn: null
+
+    },
+    mutations: {
+        setLoggedIn: function setLoggedIn(state) {
+            state.isLoggedIn = true;
+        }
+    },
+    getters: {
+        getAuthUser: function getAuthUser(state) {
+            return state.authenticatedUser;
+        }
+    },
+    actions: {
+        setLoggedIn: function (_setLoggedIn) {
+            function setLoggedIn(_x) {
+                return _setLoggedIn.apply(this, arguments);
+            }
+
+            setLoggedIn.toString = function () {
+                return _setLoggedIn.toString();
+            };
+
+            return setLoggedIn;
+        }(function (context) {
+            context.commit(setLoggedIn);
+        })
+    }
+});
 
 /***/ })
 /******/ ]);
