@@ -149,12 +149,12 @@
 
             <div class="navbar-end">
                 <!-- <a class="navbar-item is-hidden-desktop-only" href="https://github.com/jgthms/bulma" target="_blank">
-                            Github
-                            </a>
-                            <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/jgthms" target="_blank">
-                            Twitter
-                            </a> -->
-                <div class="navbar-item" v-if="!this.$auth.isAuthenticated()">
+                                Github
+                                </a>
+                                <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/jgthms" target="_blank">
+                                Twitter
+                                </a> -->
+                <div class="navbar-item" v-if="!isAuthenticated">
                     <div class="field is-grouped">
                         <p class="control">
                             <router-link to="/sign-in" class="button is-primary">
@@ -166,14 +166,14 @@
                         </p>
                     </div>
                 </div>
-                <div class="navbar-item has-dropdown is-hoverable" v-if="this.$auth.isAuthenticated()">
+                <div class="navbar-item has-dropdown is-hoverable" v-if="isAuthenticated">
                     <a class="navbar-link  is-active" href="/documentation/overview/start/">
                         {{ User.name }} &nbsp;
                         <i class="fa fa-user"></i>
                     </a>
                     <div class="navbar-dropdown ">
                         <a class="navbar-item " href="/documentation/overview/start/">
-                            Profile 
+                            Profile
                         </a>
                         <a class="navbar-item " href="http://bulma.io/documentation/modifiers/syntax/">
                             Accounts
@@ -184,7 +184,7 @@
 
                         <hr class="navbar-divider">
                         <div class="navbar-item">
-                            <a class="navbar-item " href="http://bulma.io/documentation/grid/columns/">
+                            <a @click.prevent="signOut" class="navbar-item " href="#">
                                 Sign-out
                             </a>
                         </div>
@@ -198,21 +198,36 @@
 <script>
 export default {
     mounted() {
-
+        this.$store.dispatch('setIsAuthenticated', this.$auth.isAuthenticated());
+        this.getAuthUser(); //get Authenticated User
     },
     data() {
-        return {
-           
+        return{
+
         }
     },
-    computed:{
-        User(){
-            return this.$store.state.authModule.authenticatedUser;
+    computed: {
+        User() {
+            return this.$store.getters.authenticatedUser;
         },
-        // isLoggedIn(){
-        //     this.$store.state.authModule.isLoggedIn;
-        //     //= this.$auth.isAuthenticated()
-        // }
+        isAuthenticated(){
+            //this.$store.state.authModule.isLoggedIn;
+           return this.$store.getters.isAuthenticated;
+        }
+    },
+    methods: {
+        signOut() {
+          this.$store.dispatch('setIsAuthenticated', false).then(() => {
+              this.$auth.destroyToken();
+              this.$router.push('/sign-in');
+          })
+        },
+        getAuthUser(){
+            var token = this.$auth.getToken();
+            if (token){
+                this.$store.dispatch('getAuthUser', token);
+            }
+        }
     }
 }
 </script>

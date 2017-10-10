@@ -29408,7 +29408,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(129);
-module.exports = __webpack_require__(210);
+module.exports = __webpack_require__(212);
 
 
 /***/ }),
@@ -29421,6 +29421,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_navigation_Navigation_vue__ = __webpack_require__(203);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_navigation_Navigation_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_navigation_Navigation_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_store__ = __webpack_require__(208);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_notifications_NotifDanger_vue__ = __webpack_require__(216);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_notifications_NotifDanger_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_notifications_NotifDanger_vue__);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -29433,6 +29435,7 @@ __webpack_require__(130); //import vue js in bootstrap
 
 
 
+
 //set default base_url for axios
 //axios.defaults.baseURL = 'http://localhost:9000/api';
 //set the headers in every request globally
@@ -29441,13 +29444,19 @@ Vue.prototype.$headersConfig = {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + Vue.auth.getToken()
     }
+};
 
-    //guarding routes if user is authenticated
-};__WEBPACK_IMPORTED_MODULE_0__router_routes__["a" /* default */].beforeEach(function (to, from, next) {
+Vue.component('notif-danger', __WEBPACK_IMPORTED_MODULE_3__components_notifications_NotifDanger_vue___default.a);
+
+//guarding routes if user is authenticated
+__WEBPACK_IMPORTED_MODULE_0__router_routes__["a" /* default */].beforeEach(function (to, from, next) {
     if (to.matched.some(function (record) {
         return record.meta.forVisitors;
     })) {
-        //NOTE: Vue.auth instead of this.$auth -> because app.js is not a component    
+        /*
+         * NOTE: Vue.auth instead of this.$auth -> because app.js is not a component    
+         * Remove meta fields for public routes
+        */
         if (Vue.auth.isAuthenticated()) {
             next({
                 path: '/dashboard'
@@ -46776,20 +46785,6 @@ var index_esm = {
             }
             //should add some condition token validation from the database
             else {
-                    // var config = {
-                    //     headers: {
-                    //         'Accept':'application/json',
-                    //         'Authorization': 'Bearer '+ token
-                    //     }
-                    // }
-                    // axios.get('api/user', config)
-                    // .then(response =>{
-                    //     //console.log(response)
-                    //     if(response.data)
-                    //         return token
-                    //     else
-                    //         return null;
-                    // });
                     return token;
                 }
         },
@@ -49553,7 +49548,7 @@ var routes = [{
     path: '/about',
     component: __webpack_require__(176),
     meta: {
-        forVisitors: true
+        //forVisitors: true
     }
 }, {
     path: '/projects',
@@ -49920,7 +49915,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*CSS code here*/\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*CSS code here*/\n", ""]);
 
 // exports
 
@@ -50017,6 +50012,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         //computed are functions that are cached if varaiable dependencied didn't change
         projects: function projects() {
             return this.$store.getters.loadProjects; //vuex with modules its better with large scale apps
+        },
+        isAuthenticated: function isAuthenticated() {
+            return this.$store.getters.isAuthenticated;
         }
     },
     methods: {},
@@ -50228,26 +50226,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {},
     methods: {
         onSubmit: function onSubmit() {
-            var _this = this;
-
-            axios({
-                method: 'POST',
-                url: 'api/projects',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer ' + this.$auth.getToken()
-                },
-                data: {
-                    project_name: this.project.title,
-                    description: this.project.description
-                }
-            }).then(function (response) {
-                response.data;
-                _this.$root.$children[1].showModal = false; //this close the modal accessing from Projects Components
-            }).catch(function (error) {
-                return _this.validationErrors = error.response.data;
-            });
-            //.catch(error => {console.log(error.response)});
+            var project = {
+                project_name: this.project.title,
+                description: this.project.description
+            };
+            this.$store.dispatch('storeProject', project);
         }
     }
 });
@@ -50536,7 +50519,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "level"
   }, [_vm._m(0), _vm._v(" "), _c('div', {
     staticClass: "level-right"
-  }, [_vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4), _vm._v(" "), (this.$auth.isAuthenticated()) ? _c('p', {
+  }, [_vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4), _vm._v(" "), (_vm.isAuthenticated) ? _c('p', {
     staticClass: "level-item"
   }, [_c('a', {
     staticClass: "button is-success",
@@ -50687,7 +50670,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n.mt-1[data-v-4e6a09ba] {\r\n    margin-top: 5rem;\n}\r\n", ""]);
+exports.push([module.i, "\n.mt-1[data-v-4e6a09ba] {\n    margin-top: 5rem;\n}\n.notification.is-danger[data-v-4e6a09ba]{\n    background-color: #9c2222;\n}\n", ""]);
 
 // exports
 
@@ -50749,32 +50732,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             email: '',
-            password: '',
-            authStatus: false
+            password: ''
+
         };
     },
 
+    computed: {
+        isLoggedIn: function isLoggedIn() {
+            return this.$store.getters.isLoggedIn;
+        },
+        authErrors: function authErrors() {
+            return this.$store.getters.authErrors;
+        }
+    },
     methods: {
-        login: function login() {
+        signIn: function signIn() {
             var _this = this;
 
-            var self = this;
             var data = {
-                client_id: 2,
-                client_secret: 'XETp4KfW6p94YmgFnGyED1pRjghDfvvCRHE4xYBf',
-                grant_type: 'password',
-                username: this.email,
+                email: this.email,
                 password: this.password
             };
-
-            axios.post('/oauth/token', data).then(function (response) {
-                _this.$store.dispatch('setLoggedIn');
-                self.$auth.setToken(response.data.access_token, response.data.expires_in + Date.now());
-                self.$router.push("/dashboard");
-            }).catch(function (error) {
-
-                self.authStatus = error.response.data.message;
+            this.$store.dispatch('signIn', data).then(function () {
+                _this.$store.dispatch('getAuthUser', _this.$auth.getToken()).then(function () {
+                    _this.$router.push("/dashboard");
+                });
             });
+        },
+        onDismissed: function onDismissed() {
+            this.$store.dispatch('clearErrors');
         }
     }
 });
@@ -50790,20 +50776,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "columns is-centered"
   }, [_c('div', {
     staticClass: "column is-5"
-  }, [(_vm.authStatus) ? _c('div', {
-    staticClass: "notification is-danger"
-  }, [_c('button', {
-    staticClass: "delete",
+  }, [(_vm.authErrors) ? _c('notif-danger', {
+    attrs: {
+      "errorMsg": _vm.authErrors
+    },
     on: {
-      "click": function($event) {
-        _vm.authStatus = false
-      }
+      "dismissed": _vm.onDismissed
     }
-  }), _vm._v("\n                " + _vm._s(_vm.authStatus) + "\n            ")]) : _vm._e(), _vm._v(" "), _c('form', {
+  }) : _vm._e(), _vm._v(" "), _c('form', {
     on: {
       "submit": function($event) {
         $event.preventDefault();
-        _vm.login()
+        _vm.signIn()
       }
     }
   }, [_c('div', {
@@ -50894,7 +50878,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "errors.has('password')"
     }],
     staticClass: "help is-danger"
-  }, [_vm._v(_vm._s(_vm.errors.first('title')))])]), _vm._v(" "), _vm._m(3)])])])])
+  }, [_vm._v(_vm._s(_vm.errors.first('title')))])]), _vm._v(" "), _vm._m(3)])], 1)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
     staticClass: "icon is-small is-left"
@@ -51385,14 +51369,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {},
+    mounted: function mounted() {
+        this.$store.dispatch('setIsAuthenticated', this.$auth.isAuthenticated());
+        this.getAuthUser(); //get Authenticated User
+    },
     data: function data() {
         return {};
     },
 
     computed: {
         User: function User() {
-            return this.$store.state.authModule.authenticatedUser;
+            return this.$store.getters.authenticatedUser;
+        },
+        isAuthenticated: function isAuthenticated() {
+            //this.$store.state.authModule.isLoggedIn;
+            return this.$store.getters.isAuthenticated;
+        }
+    },
+    methods: {
+        signOut: function signOut() {
+            var _this = this;
+
+            this.$store.dispatch('setIsAuthenticated', false).then(function () {
+                _this.$auth.destroyToken();
+                _this.$router.push('/sign-in');
+            });
+        },
+        getAuthUser: function getAuthUser() {
+            var token = this.$auth.getToken();
+            if (token) {
+                this.$store.dispatch('getAuthUser', token);
+            }
         }
     }
 });
@@ -51455,7 +51462,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("\n                Projects\n            ")])], 1), _vm._v(" "), _c('div', {
     staticClass: "navbar-end"
-  }, [(!this.$auth.isAuthenticated()) ? _c('div', {
+  }, [(!_vm.isAuthenticated) ? _c('div', {
     staticClass: "navbar-item"
   }, [_c('div', {
     staticClass: "field is-grouped"
@@ -51470,7 +51477,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "icon"
   }, [_c('i', {
     staticClass: "fa fa-sign-in"
-  })]), _vm._v(" "), _c('span', [_vm._v("Sign-in")])])], 1)])]) : _vm._e(), _vm._v(" "), (this.$auth.isAuthenticated()) ? _c('div', {
+  })]), _vm._v(" "), _c('span', [_vm._v("Sign-in")])])], 1)])]) : _vm._e(), _vm._v(" "), (_vm.isAuthenticated) ? _c('div', {
     staticClass: "navbar-item has-dropdown is-hoverable"
   }, [_c('a', {
     staticClass: "navbar-link  is-active",
@@ -51486,7 +51493,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "href": "/documentation/overview/start/"
     }
-  }, [_vm._v("\n                        Profile \n                    ")]), _vm._v(" "), _c('a', {
+  }, [_vm._v("\n                        Profile\n                    ")]), _vm._v(" "), _c('a', {
     staticClass: "navbar-item ",
     attrs: {
       "href": "http://bulma.io/documentation/modifiers/syntax/"
@@ -51498,7 +51505,20 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("\n                        " + _vm._s(_vm.User.email) + "\n                    ")]), _vm._v(" "), _c('hr', {
     staticClass: "navbar-divider"
-  }), _vm._v(" "), _vm._m(4)])]) : _vm._e()])])])
+  }), _vm._v(" "), _c('div', {
+    staticClass: "navbar-item"
+  }, [_c('a', {
+    staticClass: "navbar-item ",
+    attrs: {
+      "href": "#"
+    },
+    on: {
+      "click": function($event) {
+        $event.preventDefault();
+        _vm.signOut($event)
+      }
+    }
+  }, [_vm._v("\n                            Sign-out\n                        ")])])])]) : _vm._e()])])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('a', {
     staticClass: "navbar-item is-hidden-desktop",
@@ -51652,15 +51672,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "fa fa-rss"
   })]), _vm._v(" "), _c('span', [_vm._v("Subscribe")])])])])])])])])])
-},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "navbar-item"
-  }, [_c('a', {
-    staticClass: "navbar-item ",
-    attrs: {
-      "href": "http://bulma.io/documentation/grid/columns/"
-    }
-  }, [_vm._v("\n                            Sign-out\n                        ")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -51679,8 +51690,8 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vuex__ = __webpack_require__(209);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_projectsModule__ = __webpack_require__(214);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_authModule__ = __webpack_require__(215);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__modules_projectsModule__ = __webpack_require__(210);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_authModule__ = __webpack_require__(211);
 
 
 
@@ -52608,15 +52619,6 @@ var index_esm = {
 
 /***/ }),
 /* 210 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 211 */,
-/* 212 */,
-/* 213 */,
-/* 214 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -52642,6 +52644,28 @@ var _this = this;
             axios.get('api/projects', _this.$headersConfig).then(function (response) {
                 context.commit('getProjects', response.data);
             });
+        },
+        storeProject: function storeProject(context, payload) {
+            console.log(payload);
+            // axios({
+            //     method: 'POST',
+            //     url: 'api/projects',
+            //     headers: {
+            //         'Accept': 'application/json',
+            //         'Authorization': 'Bearer ' + this.$auth.getToken()
+            //     },
+            //     data: {
+            //         project_name: this.project.title,
+            //         description: this.project.description
+            //     }
+            // })
+            //     .then(
+            //         response => {
+            //             response.data
+            //             this.$root.$children[1].showModal = false //this close the modal accessing from Projects Components
+            //         }
+            //     )
+            //     .catch(error => this.validationErrors = error.response.data);
         }
     },
     getters: {
@@ -52667,49 +52691,197 @@ var _this = this;
 });
 
 /***/ }),
-/* 215 */
+/* 211 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+var _this = this;
+
 /*
     You can also extract the authModule objects[state, mutations, getters, actions] by file  by using extract default
 */
 
+
 /* harmony default export */ __webpack_exports__["a"] = ({
     state: {
-        authenticatedUser: {
-            name: "Jerick Labasan",
-            email: "jeck.labasan@gmail.com"
-        },
-        isLoggedIn: null
-
+        authenticatedUser: {},
+        isAuthenticated: false,
+        authErrors: null
     },
     mutations: {
-        setLoggedIn: function setLoggedIn(state) {
-            state.isLoggedIn = true;
+        setAuthenticatedUser: function setAuthenticatedUser(state, payload) {
+            state.authenticatedUser = payload;
+        },
+        setIsAuthenticated: function setIsAuthenticated(state, payload) {
+            state.isAuthenticated = payload;
+        },
+        setErrors: function setErrors(state, payload) {
+            state.authErrors = payload;
+        },
+        clearErrors: function clearErrors(state) {
+            state.authErrors = null;
         }
     },
     getters: {
-        getAuthUser: function getAuthUser(state) {
+        authenticatedUser: function authenticatedUser(state) {
             return state.authenticatedUser;
+        },
+        authErrors: function authErrors(state) {
+            return state.authErrors;
+        },
+        isAuthenticated: function isAuthenticated(state) {
+            return state.isAuthenticated;
         }
     },
     actions: {
-        setLoggedIn: function (_setLoggedIn) {
-            function setLoggedIn(_x) {
-                return _setLoggedIn.apply(this, arguments);
-            }
-
-            setLoggedIn.toString = function () {
-                return _setLoggedIn.toString();
+        setIsAuthenticated: function setIsAuthenticated(context, payload) {
+            return context.commit('setIsAuthenticated', payload);
+        },
+        getAuthUser: function getAuthUser(context, token) {
+            var config = {
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                }
+            };
+            axios.get('api/user', config).then(function (response) {
+                //console.log(response)
+                context.commit('setAuthenticatedUser', response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        setErrors: function setErrors(context, payload) {
+            context.commit('setErrors', payload);
+        },
+        clearErrors: function clearErrors(context) {
+            context.commit('clearErrors');
+        },
+        clearAuthUser: function clearAuthUser(context) {
+            return context.commit('setAuthenticatedUser', {});
+        },
+        signIn: function signIn(context, payload) {
+            //console.log(payload)
+            var self = _this;
+            var data = {
+                client_id: 2,
+                client_secret: 'XETp4KfW6p94YmgFnGyED1pRjghDfvvCRHE4xYBf',
+                grant_type: 'password',
+                username: payload.email,
+                password: payload.password
             };
 
-            return setLoggedIn;
-        }(function (context) {
-            context.commit(setLoggedIn);
-        })
+            return axios.post('/oauth/token', data).then(function (response) {
+
+                var token = response.data.access_token;
+                var expiration = response.data.expires_in + Date.now();
+                //save token to local storage
+                __WEBPACK_IMPORTED_MODULE_0_vue___default.a.auth.setToken(token, expiration);
+                //set IsAuthenticated to true
+                context.commit('setIsAuthenticated', true);
+            }).catch(function (error) {
+                //self.authStatus = error.response.data.message
+                context.commit('setErrors', error.response.data.message);
+            });
+        }
     }
 });
+
+/***/ }),
+/* 212 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 213 */,
+/* 214 */,
+/* 215 */,
+/* 216 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(217),
+  /* template */
+  __webpack_require__(218),
+  /* styles */
+  null,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "C:\\Users\\Jerick\\Desktop\\WEB-APPS\\laravel-spa\\laravue-spa\\resources\\assets\\js\\components\\notifications\\NotifDanger.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] NotifDanger.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-cbd5e40a", Component.options)
+  } else {
+    hotAPI.reload("data-v-cbd5e40a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 217 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['errorMsg'],
+    methods: {
+        onClose: function onClose() {
+            this.$emit('dismissed');
+        }
+    }
+});
+
+/***/ }),
+/* 218 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "notification is-danger"
+  }, [_c('button', {
+    staticClass: "delete",
+    on: {
+      "click": _vm.onClose
+    }
+  }), _vm._v("\n    " + _vm._s(_vm.errorMsg) + "\n")])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-cbd5e40a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

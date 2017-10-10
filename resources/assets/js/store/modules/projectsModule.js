@@ -21,10 +21,32 @@ export default {
                     context.commit('getProjects',response.data);
                 }
             );          
+        },
+        storeProject: (context, payload) => {
+            console.log(payload)
+            // axios({
+            //     method: 'POST',
+            //     url: 'api/projects',
+            //     headers: {
+            //         'Accept': 'application/json',
+            //         'Authorization': 'Bearer ' + this.$auth.getToken()
+            //     },
+            //     data: {
+            //         project_name: this.project.title,
+            //         description: this.project.description
+            //     }
+            // })
+            //     .then(
+            //         response => {
+            //             response.data
+            //             this.$root.$children[1].showModal = false //this close the modal accessing from Projects Components
+            //         }
+            //     )
+            //     .catch(error => this.validationErrors = error.response.data);
         }
     },
     getters: { 
-        loadProjects:state => {
+        loadProjects: state => {
             return state.projects;
         }
         //it's a computed property for store

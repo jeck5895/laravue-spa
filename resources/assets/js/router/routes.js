@@ -12,7 +12,7 @@ let routes = [
         path:'/about',
         component: require('../components/About.vue'),
         meta:{
-            forVisitors: true
+            //forVisitors: true
         }
     },
     {

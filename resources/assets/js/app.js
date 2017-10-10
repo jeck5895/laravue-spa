@@ -9,6 +9,7 @@ require('./bootstrap'); //import vue js in bootstrap
 import router from './router/routes';
 import Navigation from './components/navigation/Navigation.vue';
 import {store} from './store/store';
+import NotifDanger from './components/notifications/NotifDanger.vue';
 
 //set default base_url for axios
 //axios.defaults.baseURL = 'http://localhost:9000/api';
@@ -20,11 +21,16 @@ Vue.prototype.$headersConfig =  {
     }
 }
 
+Vue.component('notif-danger', NotifDanger);
+
 //guarding routes if user is authenticated
 router.beforeEach((to, from, next)=>{
     if(to.matched.some(record => record.meta.forVisitors)){
-        //NOTE: Vue.auth instead of this.$auth -> because app.js is not a component    
-        if(Vue.auth.isAuthenticated()){ 
+        /*
+         * NOTE: Vue.auth instead of this.$auth -> because app.js is not a component    
+         * Remove meta fields for public routes
+        */
+        if(Vue.auth.isAuthenticated()){  
             next({
                 path:'/dashboard'
             });

@@ -43,29 +43,13 @@ export default {
         
     },
     methods: {
+        
         onSubmit() {
-
-            axios({
-                method: 'POST',
-                url: 'api/projects',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer ' + this.$auth.getToken()
-                },
-                data: {
-                    project_name: this.project.title,
-                    description: this.project.description
-                }
-            })
-                .then(
-                    response => {
-                        response.data
-                        this.$root.$children[1].showModal = false //this close the modal accessing from Projects Components
-                    }
-                )
-                .catch(error => this.validationErrors = error.response.data);
-            //.catch(error => {console.log(error.response)});
-            
+            let project = {
+                project_name: this.project.title,
+                description: this.project.description
+            };
+            this.$store.dispatch('storeProject', project);
         }
     }
 }

@@ -1,12 +1,12 @@
 <template>
     <div class="mt-1">
         <div class="columns is-centered">
+
             <div class="column is-5">
-                <div class="notification is-danger" v-if="authStatus">
-                    <button class="delete" @click="authStatus = false"></button>
-                    {{ authStatus }}
-                </div>
-                <form @submit.prevent="login()">
+
+                <notif-danger v-if="authErrors" @dismissed="onDismissed" :errorMsg="authErrors"></notif-danger>
+
+                <form @submit.prevent="signIn()">
                     <div class="field">
                         <p class="control has-icons-left has-icons-right">
                             <input v-validate="{rules:{required:true}}" name="username" class="input" v-model="email" type="email" placeholder="Email" required>
@@ -52,32 +52,31 @@ export default {
         return {
             email: '',
             password: '',
-            authStatus: false
+
+        }
+    },
+    computed: {
+        isLoggedIn() {
+            return this.$store.getters.isLoggedIn;
+        },
+        authErrors() {
+            return this.$store.getters.authErrors;
         }
     },
     methods: {
-        login() {
-            let self = this;
+        signIn() {
             let data = {
-                client_id: 2,
-                client_secret: 'XETp4KfW6p94YmgFnGyED1pRjghDfvvCRHE4xYBf',
-                grant_type: 'password',
-                username: this.email,
+                email: this.email,
                 password: this.password
-            };
-
-            axios.post('/oauth/token', data)
-                .then(response => {
-                    this.$store.dispatch('setLoggedIn');
-                    self.$auth.setToken(response.data.access_token, response.data.expires_in + Date.now());
-                    self.$router.push("/dashboard");
-
-                })
-                .catch(function(error) {
-
-                    self.authStatus = error.response.data.message
-
-                })
+            }
+            this.$store.dispatch('signIn', data).then(() => {
+                this.$store.dispatch('getAuthUser', this.$auth.getToken()).then(()=>{
+                    this.$router.push("/dashboard");
+                });
+            });
+        },
+        onDismissed() {
+            this.$store.dispatch('clearErrors');
         }
     }
 }
@@ -85,8 +84,12 @@ export default {
 
 
 <style lang="css" scoped>
-.mt-1 {
-    margin-top: 5rem;
-}
+    .mt-1 {
+        margin-top: 5rem;
+    }
+
+    .notification.is-danger{
+        background-color: #9c2222;
+    }
 </style>
 

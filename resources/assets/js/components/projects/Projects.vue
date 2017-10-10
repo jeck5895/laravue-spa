@@ -35,7 +35,7 @@
                     <p class="level-item"><a>Published</a></p>
                     <p class="level-item"><a>Drafts</a></p>
                     <p class="level-item"><a>Deleted</a></p>
-                    <p class="level-item" v-if="this.$auth.isAuthenticated()"><a class="button is-success" @click="showModal = true">Add Project</a></p>
+                    <p class="level-item" v-if="isAuthenticated"><a class="button is-success" @click="showModal = true">Add Project</a></p>
                 </div>
             </nav>
 
@@ -76,12 +76,15 @@
         computed:{ //computed are functions that are cached if varaiable dependencied didn't change
             projects(){ 
                 return this.$store.getters.loadProjects; //vuex with modules its better with large scale apps
+            },
+            isAuthenticated(){
+                return this.$store.getters.isAuthenticated;
             }
         },
         methods:{
             
         },
-        components:{ modal, AddProjects, Project}
+        components:{ modal, AddProjects, Project }
     }
 </script>
 

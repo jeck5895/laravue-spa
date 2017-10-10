@@ -18,20 +18,6 @@ export default function(Vue){
             }
             //should add some condition token validation from the database
             else{
-                // var config = {
-                //     headers: {
-                //         'Accept':'application/json',
-                //         'Authorization': 'Bearer '+ token
-                //     }
-                // }
-                // axios.get('api/user', config)
-                // .then(response =>{
-                //     //console.log(response)
-                //     if(response.data)
-                //         return token
-                //     else
-                //         return null;
-                // });
                 return token;
             }
         },
